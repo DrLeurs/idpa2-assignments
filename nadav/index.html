@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather app</title>
+
+  <style>
+    body {
+      background: linear-gradient(109.6deg, rgb(104, 183, 249) 31.3%, rgb(176, 248, 200) 100.2%);
+      font-family: avenir;
+      color: black;
+      text-align: center;
+
+    }
+
+    .information {
+      border: white 2px solid;
+      background-color: aliceblue;
+      z-index: -1;
+      margin-top: 200px;
+      font-size: 15px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      padding-right: 100px;
+      padding-left: 100px;
+    }
+
+    .condition {
+      font-size: 25px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>My weather app</h1>
+
+  <body onLoad="myFunction();">
+    <!-- show forecast -->
+    <div class="information">
+      <p class="condition" id="status" ></p>
+      <p class="condition" id="condition"></p>
+      <p class="location" id="location"></p>
+    </div>
+
+    <script>
+      //geo location
+      function myFunction() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          myElement.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+      function showPosition(position) {
+
+        //fetch API
+        const weatherURL = 'http://api.weatherapi.com/v1/forecast.json?key=7f2cabf758a54a4b955131722230803&q=' + position.coords.latitude + ',' + position.coords.longitude + '&days=1&aqi=no&alerts=no';
+        fetch(weatherURL)
+          .then((response) => response.json())
+          .then((data) => addWeather(data));
+      }
+      function addWeather(data) {
+        document.getElementById("location").innerText = data.location.name + ", " + data.location.country;
+        document.getElementById("condition").innerText = data.current.temp_c + "°C " + data.current.condition.text;
+        const temp = data.current.temp_c;
+
+        //status
+        if (5 > temp) {
+          document.getElementById("status").innerHTML = "freezing cold ❄️";
+        }
+        else if (10 > temp) {
+          document.getElementById("status").innerHTML = "bzzz cold 🥶";
+        }
+        else if (15 > temp) {
+          document.getElementById("status").innerHTML = "Warming ⛅";
+        }
+        else if (20 > temp) {
+          document.getElementById("status").innerHTML = "Nice and Warm 😎";
+        }
+        else {
+          degree_text.innerHTML = "";
+        }
+      }
+
+
+
+//web storage
+// var button = document.getElementById("btn");
+// var text = document.getElementById("weather");
+
+// button.addEventListener("click", function(){
+// localStorage.name=text.value;
+// });
+// console.log(localStorage.name);
+
+
+
+
+    </script>
+  </body>
+
+</html>
